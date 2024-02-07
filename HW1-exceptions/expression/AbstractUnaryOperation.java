@@ -25,7 +25,7 @@ public abstract class AbstractUnaryOperation implements CustomExpression {
 
     @Override
     public String toString() {
-        return getOperation() + value;
+        return getOperation() + "(" + value + ")";
     }
 
     @Override

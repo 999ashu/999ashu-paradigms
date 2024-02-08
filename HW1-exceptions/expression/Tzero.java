@@ -1,7 +1,7 @@
 package expression;
 
-public class tzero extends AbstractUnaryOperation{
-    public tzero(CustomExpression value) {
+public class Tzero extends AbstractUnaryOperation{
+    public Tzero(CustomExpression value) {
         super(value);
     }
 

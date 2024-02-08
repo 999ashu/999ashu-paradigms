@@ -2,8 +2,6 @@ package expression;
 
 import expression.exceptions.ExpressionParser;
 
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) {
         TripleExpression exp = new Divide(

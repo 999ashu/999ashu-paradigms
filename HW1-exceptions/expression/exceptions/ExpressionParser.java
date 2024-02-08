@@ -24,8 +24,7 @@ public class ExpressionParser implements TripleParser, ListParser {
     }
 
     private final class ExpParser extends BaseParser {
-        boolean closing = true;
-        int arguments = 1;
+        int tokens = 1;
         Map<Character, Character> parens = new HashMap<>(Map.of(
                 '(', ')',
                 '[', ']',
@@ -38,9 +37,7 @@ public class ExpressionParser implements TripleParser, ListParser {
 
         private CustomExpression checkParsing() {
             CustomExpression result = parseExpression();
-            if (!closing) {
-                throw new IncorrectBracketSequenceException("closing");
-            } else if (eof()) {
+            if (eof()) {
                 return result;
             } else if (take(')')) {
                 throw new IncorrectBracketSequenceException("opening");
@@ -79,50 +76,53 @@ public class ExpressionParser implements TripleParser, ListParser {
             skipWhitespace();
             if (parens.containsKey(lookup())) {
                 char parenthesis = take();
-                closing = false;
                 skipWhitespace();
                 CustomExpression argument = parseExpression();
                 skipWhitespace();
                 if (test(parens.get(parenthesis))) {
-                    closing = true;
                     take();
-                }
-                arguments++;
-                return argument;
-            } else if (between('x', 'z')) {
-                arguments++;
-                return new Variable(String.valueOf(take()));
-            } else if (take('$')) {
-                String var = getVarName();
-                if (vars.contains(var)) {
-                    return new Variable(Integer.parseInt(var));
-                } else {
-                    throw new UnexpectedSymbolException(String.valueOf(var.charAt(0)));
-                }
-            } else if (lookup() == 't' || lookup() == 'l') {
-                if (take('t') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
-                    return new tzero(parseAtom());
-                } else if (take('l') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
-                    return new lzero(parseAtom());
+                } else if (eof()) {
+                    throw new IncorrectBracketSequenceException("closing");
                 } else {
                     throw new UnexpectedSymbolException(String.valueOf(take()));
                 }
+                tokens++;
+                return argument;
+            } else if (between('x', 'z')) {
+                tokens++;
+                return new Variable(String.valueOf(take()));
+            } else if (take('$')) {
+                String var = getVarName();
+                if (vars.contains("$" + var)) {
+                    tokens++;
+                    return new Variable(Integer.parseInt(var));
+                } else {
+                    throw new UnexpectedSymbolException("$");
+                }
+            } else if (between('0', '9')) {
+                tokens++;
+                return new Const(getNumber(false));
             } else if (take('-')) {
                 if (between('0', '9')) {
-                    arguments++;
+                    tokens++;
                     return new Const(getNumber(true));
                 } else {
                     return new CheckedNegate(parseAtom());
                 }
-            } else if (between('0', '9')) {
-                arguments++;
-                return new Const(getNumber(false));
+            } else if (lookup() == 't' || lookup() == 'l') {
+                if (take('t') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
+                    return new Tzero(parseAtom());
+                } else if (take('l') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
+                    return new Lzero(parseAtom());
+                } else {
+                    throw new UnexpectedSymbolException(String.valueOf(take()));
+                }
             } else if (eof() || take('*') || take('/') ||
                     take('+') || take('-')) {
-                if (arguments == 1 && eof()) {
-                    throw new InvalidArgumentException("any");
+                if (tokens == 1 && eof()) {
+                    throw new InvalidTokenException("any");
                 } else {
-                    throw new InvalidArgumentException(String.valueOf(arguments));
+                    throw new InvalidTokenException(String.valueOf(tokens));
                 }
             } else if (test(')')) {
                 throw new EmptyParenthesisException();
@@ -141,10 +141,7 @@ public class ExpressionParser implements TripleParser, ListParser {
 
         private String getVarName() {
             StringBuilder var = new StringBuilder();
-            while (Character.isDigit(lookup())) {
-                if (eof()) {
-                    break;
-                }
+            while (between('0', '9')) {
                 var.append(take());
             }
             return var.toString();

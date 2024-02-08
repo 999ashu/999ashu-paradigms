@@ -4,15 +4,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class Variable implements CustomExpression {
-    private String stringValue;
-    private int intValue;
+    private final String value;
+    private int index;
 
     public Variable(String value) {
-        this.stringValue = value;
+        this.value = value;
     }
 
     public Variable(int value) {
-        this.intValue = value;
+        this.index = value;
+        this.value = "$" + value;
     }
 
     @Override
@@ -22,22 +23,22 @@ public class Variable implements CustomExpression {
 
     @Override
     public int evaluate(int x, int y, int z) {
-        return switch (stringValue) {
+        return switch (this.value) {
             case "x" -> x;
             case "y" -> y;
             case "z" -> z;
-            default -> 0;
+            default -> index;
         };
     }
 
     @Override
     public int evaluate(List<Integer> variables) {
-        return variables.get(intValue);
+        return variables.get(index);
     }
 
     @Override
     public String toString() {
-        return stringValue;
+        return this.value;
     }
 
     @Override
@@ -45,11 +46,11 @@ public class Variable implements CustomExpression {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Variable variable = (Variable) o;
-        return Objects.equals(stringValue, variable.stringValue);
+        return index == variable.index && Objects.equals(value, variable.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stringValue);
+        return Objects.hash(value, index);
     }
 }

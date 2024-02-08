@@ -1,7 +1,7 @@
 package expression;
 
-public class lzero extends AbstractUnaryOperation{
-    public lzero(CustomExpression value) {
+public class Lzero extends AbstractUnaryOperation{
+    public Lzero(CustomExpression value) {
         super(value);
     }
 

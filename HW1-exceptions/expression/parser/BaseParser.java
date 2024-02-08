@@ -44,6 +44,10 @@ public class BaseParser {
         }
     }
 
+    protected char lookup() {
+        return ch;
+    }
+
     protected boolean between(final char from, final char to) {
         return from <= ch && ch <= to;
     }

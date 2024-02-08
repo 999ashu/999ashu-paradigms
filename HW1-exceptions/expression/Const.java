@@ -1,5 +1,6 @@
 package expression;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Const implements CustomExpression {
@@ -17,6 +18,11 @@ public class Const implements CustomExpression {
     @Override
     public int evaluate(int x, int y, int z) {
         return this.value;
+    }
+
+    @Override
+    public int evaluate(List<Integer> variables) {
+        return value;
     }
 
     @Override

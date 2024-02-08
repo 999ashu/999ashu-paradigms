@@ -1,5 +1,6 @@
 package expression;
 
+import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractBinaryOperation implements CustomExpression {
@@ -21,6 +22,11 @@ public abstract class AbstractBinaryOperation implements CustomExpression {
     @Override
     public int evaluate(int x, int y, int z) {
         return compute(value1.evaluate(x, y, z), value2.evaluate(x, y, z));
+    }
+
+    @Override
+    public int evaluate(List<Integer> variables) {
+        return compute(value1.evaluate(variables), value2.evaluate(variables));
     }
 
     protected abstract String getOperation();

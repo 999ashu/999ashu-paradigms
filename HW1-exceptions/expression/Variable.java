@@ -1,12 +1,18 @@
 package expression;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Variable implements CustomExpression {
-    private final String value;
+    private String stringValue;
+    private int intValue;
 
     public Variable(String value) {
-        this.value = value;
+        this.stringValue = value;
+    }
+
+    public Variable(int value) {
+        this.intValue = value;
     }
 
     @Override
@@ -16,7 +22,7 @@ public class Variable implements CustomExpression {
 
     @Override
     public int evaluate(int x, int y, int z) {
-        return switch (value) {
+        return switch (stringValue) {
             case "x" -> x;
             case "y" -> y;
             case "z" -> z;
@@ -25,8 +31,17 @@ public class Variable implements CustomExpression {
     }
 
     @Override
+    public int evaluate(List<Integer> variables) {
+        if (intValue > 0) {
+            return variables.get(intValue);
+        } else {
+            return variables.get(Integer.parseInt(stringValue.substring(1)));
+        }
+    }
+
+    @Override
     public String toString() {
-        return this.value;
+        return stringValue;
     }
 
     @Override
@@ -34,11 +49,11 @@ public class Variable implements CustomExpression {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Variable variable = (Variable) o;
-        return Objects.equals(value, variable.value);
+        return Objects.equals(stringValue, variable.stringValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(stringValue);
     }
 }

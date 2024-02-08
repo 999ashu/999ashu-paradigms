@@ -1,11 +1,12 @@
 package expression;
 
 import expression.exceptions.ExpressionParser;
-import expression.exceptions.parsingExceptions.UnexpectedSymbolException;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        TripleExpression exp = new Divide(
+        /*TripleExpression exp = new Divide(
                 new Multiply(
                         new Multiply(
                                 new Multiply(
@@ -30,6 +31,9 @@ public class Main {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        }
+        }*/
+        ExpressionParser parser = new ExpressionParser();
+        ListExpression bebra = parser.parse("$0", List.of("$0"));
+        System.out.println(bebra.toString());
     }
 }

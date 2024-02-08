@@ -4,14 +4,30 @@ import expression.*;
 import expression.parser.*;
 import expression.exceptions.parsingExceptions.*;
 
-public class ExpressionParser implements TripleParser {
+import java.util.*;
+
+public class ExpressionParser implements TripleParser, ListParser {
+    Set<String> vars;
+
+    @Override
     public CustomExpression parse(String expression) {
         return new ExpParser(new StringSource(expression)).checkParsing();
     }
 
-    private static final class ExpParser extends BaseParser {
+    @Override
+    public ListExpression parse(String expression, List<String> variables) {
+        vars = new LinkedHashSet<>(variables);
+        return new ExpParser(new StringSource(expression)).checkParsing();
+    }
+
+    private final class ExpParser extends BaseParser {
         boolean closing = true;
         int arguments = 1;
+        Map<Character, Character> parens = new HashMap<>(Map.of(
+                '(', ')',
+                '[', ']',
+                '{', '}'
+        ));
 
         private ExpParser(CharSource source) {
             super(source);
@@ -58,12 +74,13 @@ public class ExpressionParser implements TripleParser {
 
         private CustomExpression parseAtom() {
             skipWhitespace();
-            if (take('(')) {
+            if (parens.containsKey(lookup())) {
+                char parenthesis = take();
                 closing = false;
                 skipWhitespace();
                 CustomExpression argument = parseExpression();
                 skipWhitespace();
-                if (test(')')) {
+                if (test(parens.get(parenthesis))) {
                     closing = true;
                     take();
                 }
@@ -72,6 +89,21 @@ public class ExpressionParser implements TripleParser {
             } else if (between('x', 'z')) {
                 arguments++;
                 return new Variable(String.valueOf(take()));
+            } else if (take('$')) {
+                String var = getVarName();
+                if (vars.contains(var)) {
+                    return new Variable(var);
+                } else {
+                    throw new UnexpectedSymbolException(String.valueOf(var.charAt(0)));
+                }
+            } else if (lookup() == 't' || lookup() == 'l') {
+                if (take('t') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
+                    return new tzero(parseAtom());
+                } else if (take('l') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
+                    return new lzero(parseAtom());
+                } else {
+                    throw new UnexpectedSymbolException(String.valueOf(take()));
+                }
             } else if (take('-')) {
                 if (between('0', '9')) {
                     arguments++;
@@ -102,6 +134,17 @@ public class ExpressionParser implements TripleParser {
                 number.append(take());
             } while (between('0', '9'));
             return Integer.parseInt(number.toString());
+        }
+
+        private String getVarName() {
+            StringBuilder var = new StringBuilder().append("$");
+            while (Character.isDigit(lookup())) {
+                if (eof()) {
+                    break;
+                }
+                var.append(take());
+            }
+            return var.toString();
         }
 
         private CustomExpression makeExpression(String operator, CustomExpression argument1, CustomExpression argument2) {

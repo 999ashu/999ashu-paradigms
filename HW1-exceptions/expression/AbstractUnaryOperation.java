@@ -1,5 +1,6 @@
 package expression;
 
+import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractUnaryOperation implements CustomExpression {
@@ -19,6 +20,11 @@ public abstract class AbstractUnaryOperation implements CustomExpression {
     @Override
     public int evaluate(int x, int y, int z) {
         return compute(value.evaluate(x, y, z));
+    }
+
+    @Override
+    public int evaluate(List<Integer> variables) {
+        return compute(value.evaluate(variables));
     }
 
     protected abstract String getOperation();

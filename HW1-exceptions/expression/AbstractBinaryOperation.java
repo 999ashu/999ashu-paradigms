@@ -33,7 +33,17 @@ public abstract class AbstractBinaryOperation implements CustomExpression {
 
     @Override
     public String toString() {
-        return "(" + value1.toString() + " " + getOperation() + " " + value2.toString() + ")";
+        StringBuilder sb = new StringBuilder();
+        toStringBuilder(sb);
+        return sb.toString();
+    }
+
+    public void toStringBuilder(StringBuilder sb) {
+        sb.append("(");
+        value1.toStringBuilder(sb);
+        sb.append(" ").append(getOperation()).append(" ");
+        value2.toStringBuilder(sb);
+        sb.append(")");
     }
 
     @Override

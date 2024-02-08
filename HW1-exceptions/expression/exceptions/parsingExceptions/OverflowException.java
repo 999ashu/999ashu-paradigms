@@ -1,6 +1,6 @@
 package expression.exceptions.parsingExceptions;
 
-public class OverflowException extends ParsingException {
+public class OverflowException extends ComputingException {
     public OverflowException(String operator, int value1, int value2) {
         super("Operation of '" + operator + "' is overflown: (" + value1 + " " + operator + " " + value2 + ")");
     }

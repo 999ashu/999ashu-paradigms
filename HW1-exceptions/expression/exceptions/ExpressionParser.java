@@ -1,8 +1,11 @@
 package expression.exceptions;
 
 import expression.*;
-import expression.parser.*;
 import expression.exceptions.parsingExceptions.*;
+import expression.parser.BaseParser;
+import expression.parser.CharSource;
+import expression.parser.StringSource;
+import expression.parser.TripleParser;
 
 import java.util.*;
 
@@ -92,7 +95,7 @@ public class ExpressionParser implements TripleParser, ListParser {
             } else if (take('$')) {
                 String var = getVarName();
                 if (vars.contains(var)) {
-                    return new Variable(var);
+                    return new Variable(Integer.parseInt(var));
                 } else {
                     throw new UnexpectedSymbolException(String.valueOf(var.charAt(0)));
                 }
@@ -137,7 +140,7 @@ public class ExpressionParser implements TripleParser, ListParser {
         }
 
         private String getVarName() {
-            StringBuilder var = new StringBuilder().append("$");
+            StringBuilder var = new StringBuilder();
             while (Character.isDigit(lookup())) {
                 if (eof()) {
                     break;

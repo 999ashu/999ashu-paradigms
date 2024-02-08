@@ -32,11 +32,7 @@ public class Variable implements CustomExpression {
 
     @Override
     public int evaluate(List<Integer> variables) {
-        if (intValue > 0) {
-            return variables.get(intValue);
-        } else {
-            return variables.get(Integer.parseInt(stringValue.substring(1)));
-        }
+        return variables.get(intValue);
     }
 
     @Override

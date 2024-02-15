@@ -30,6 +30,10 @@ public class Const implements CustomExpression {
         return String.valueOf(this.value);
     }
 
+    public void toStringBuilder(StringBuilder sb) {
+        sb.append(this.value);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -31,15 +31,7 @@ public abstract class AbstractUnaryOperation implements CustomExpression {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        toStringBuilder(sb);
-        return sb.toString();
-    }
-
-    public void toStringBuilder(StringBuilder sb) {
-        sb.append(getOperation()).append("(");
-        value.toStringBuilder(sb);
-        sb.append(")");
+        return getOperation() + "(" + value + ")";
     }
 
     @Override

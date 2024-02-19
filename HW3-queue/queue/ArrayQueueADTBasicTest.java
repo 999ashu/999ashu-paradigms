@@ -1,6 +1,6 @@
 package queue;
 
-public class ArrayQueueADTTest {
+public class ArrayQueueADTBasicTest {
     public static void fill(ArrayQueueADT queue, int x) {
         for (int i = 1; i <= x; i++) {
             ArrayQueueADT.enqueue(queue, "bebra numba " + i);

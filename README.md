@@ -4,4 +4,5 @@
 ### Solutions:
  1. [Exceptions + Zeroes + Parsens + List](https://github.com/999ashu/999ashu-paradigms/tree/master/HW1-exceptions/expression)
  1. [BinarySearch + Choice + ClosestD](https://github.com/999ashu/999ashu-paradigms/tree/master/HW2-search/search/)
+ 1. [ArrayQueue](https://github.com/999ashu/999ashu-paradigms/tree/master/HW3-queue/queue/)
  

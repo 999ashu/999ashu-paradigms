@@ -1,81 +1,63 @@
 package queue;
 
-import java.util.Objects;
+import java.util.function.Predicate;
 
-// Model: HEAD -> a[1], a[2], ..., a[n] <- TAIL.
-//        New elements are appended to the tail.
-//        Old elements are took from the head one by one.
-// Invariant: n ⩾ 0, ∀ i ∈ [1; n]: a'[i] != null.
-// Let: immutable(k), ∀ i ∈ [1; k]: a'[i] != a[i].
-public class ArrayQueue {
-    private static int amount = 9;
-    private static Object[] elements = new Object[amount];
-    private static int head = amount - 1;
-    private static int tail = head;
-    private static int size;
+public class ArrayQueue extends AbstractQueue {
+    private Object[] elements = new Object[9];
+    private int head;
 
-    // Pre: element != null.
-    // Post: n' = n + 1, a'[n'] = element, immutable(n).
-    public void enqueue(Object o) {
-        Objects.requireNonNull(o);
-        ensureCapacity();
-        elements[tail] = o;
-        tail = tail > 0 ? --tail : amount - 1;
-        size++;
+    private int getTail() {
+        return head + size < elements.length ? head + size : head + size - elements.length;
     }
 
-    // Pre: true.
-    // Post: n' = n + 1, immutable(n).
+    @Override
+    protected void enqueueImpl(Object o) {
+        ensureCapacity();
+        elements[getTail()] = o;
+    }
+
     private void ensureCapacity() {
-        if ((head == tail) && (elements[head] != null)) {
-            Object[] temp = new Object[amount * 3];
-            for (int i = temp.length - 1 - size; i < temp.length; i++) {
-                temp[i] = elements[tail];
-                tail = tail < (amount - 1) ? ++tail : 0;
-            }
-            amount *= 3;
-            head = amount - 1;
-            tail = head - size;
+        if (size == elements.length) {
+            Object[] temp = new Object[elements.length * 3];
+            System.arraycopy(elements, head, temp, 0, elements.length - head);
+            System.arraycopy(elements, 0, temp, elements.length - head, head);
             elements = temp;
+            head = 0;
         }
     }
 
-    // Pre: true.
-    // Post: returns a[n], n' = n, immutable(n).
-    public Object element() {
-        assert size > 0;
+    protected Object elementImpl() {
         return elements[head];
     }
 
-    // Pre: true.
-    // Post: returns a[n], n' = n - 1, immutable(n).
-    public Object dequeue() {
-        assert size > 0;
+    protected Object dequeueImpl() {
         Object result = element();
-        elements[head] = null;
-        head = head > 0 ? --head : amount - 1;
-        size--;
+        head = head + 1 < elements.length ? ++head : 0;
         return result;
     }
 
     // Pre: true.
-    // Post: returns n, n' = n, immutable(n).
-    public int size() {
-        return size;
+    // Post: returns count of elements in queue that match condition.
+    public int countIf(Predicate<Object> predicate) {
+        int count = 0;
+        int i;
+        if (head + size >= elements.length) {
+            for (i = head; i < elements.length - 1; i++) {
+                if (predicate.test(elements[i])) {
+                    count++;
+                }
+            }
+        }
+        for (i = 0; i < getTail() - 1; i++) {
+            if (predicate.test(elements[i])) {
+                count++;
+            }
+        }
+        return count;
     }
 
-    // Pre: true.
-    // Post: returns (n == 0), n' = n, immutable(n).
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    // Pre: true.
-    // Post: n' = 0.
-    public void clear() {
-        elements = new Object[amount];
-        head = amount - 1;
-        tail = head;
-        size = 0;
+    protected void clearImp() {
+        elements = new Object[9];
+        head = 0;
     }
 }

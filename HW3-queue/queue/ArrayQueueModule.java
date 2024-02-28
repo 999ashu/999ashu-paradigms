@@ -37,7 +37,7 @@ public class ArrayQueueModule {
     public static Object dequeue() {
         assert size > 0;
         Object result = element();
-        head = head + 1 < elements.length ? ++head : 0;
+        head = head < elements.length - 1 ? ++head : 0;
         size--;
         return result;
     }
@@ -45,20 +45,18 @@ public class ArrayQueueModule {
     // Pre: true.
     // Post: returns count of elements in queue that match condition.
     public static int countIf(Predicate<Object> predicate) {
-        int count = 0;
-        int i;
-        if (head + size >= elements.length) {
-            for (i = head; i < elements.length - 1; i++) {
-                if (predicate.test(elements[i])) {
-                    count++;
-                }
-            }
+        if (size == 0) {
+            return 0;
         }
-        for (i = 0; i < getTail() - 1; i++) {
-            if (predicate.test(elements[i])) {
+        int count = 0;
+        int pointer = head;
+        int tail = getTail();
+        do {
+            if (predicate.test(elements[pointer])) {
                 count++;
             }
-        }
+            pointer = pointer < elements.length - 1 ? ++pointer : 0;
+        } while (pointer != tail);
         return count;
     }
 

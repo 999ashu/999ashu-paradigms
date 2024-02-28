@@ -45,20 +45,18 @@ public class ArrayQueueADT {
     // Pre: true.
     // Post: returns count of elements in queue that match condition.
     public static int countIf(ArrayQueueADT queue, Predicate<Object> predicate) {
-        int count = 0;
-        int i;
-        if (queue.head + queue.size >= queue.elements.length) {
-            for (i = queue.head; i < queue.elements.length - 1; i++) {
-                if (predicate.test(queue.elements[i])) {
-                    count++;
-                }
-            }
+        if (queue.size == 0) {
+            return 0;
         }
-        for (i = 0; i < getTail(queue) - 1; i++) {
-            if (predicate.test(queue.elements[i])) {
+        int count = 0;
+        int pointer = queue.head;
+        int tail = getTail(queue);
+        do {
+            if (predicate.test(queue.elements[pointer])) {
                 count++;
             }
-        }
+            pointer = pointer < queue.elements.length - 1 ? ++pointer : 0;
+        } while (pointer != tail);
         return count;
     }
 

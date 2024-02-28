@@ -39,20 +39,18 @@ public class ArrayQueue extends AbstractQueue {
     // Pre: true.
     // Post: returns count of elements in queue that match condition.
     public int countIf(Predicate<Object> predicate) {
-        int count = 0;
-        int i;
-        if (head + size >= elements.length) {
-            for (i = head; i < elements.length - 1; i++) {
-                if (predicate.test(elements[i])) {
-                    count++;
-                }
-            }
+        if (size == 0) {
+            return 0;
         }
-        for (i = 0; i < getTail() - 1; i++) {
-            if (predicate.test(elements[i])) {
+        int count = 0;
+        int pointer = head;
+        int tail = getTail();
+        do {
+            if (predicate.test(elements[pointer])) {
                 count++;
             }
-        }
+            pointer = pointer < elements.length - 1 ? ++pointer : 0;
+        } while (pointer != tail);
         return count;
     }
 

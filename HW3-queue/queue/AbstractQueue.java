@@ -22,12 +22,13 @@ public abstract class AbstractQueue implements Queue {
 
     public Object dequeue() {
         assert size > 0;
-        Object result = dequeueImpl();
+        Object result = elementImpl();
+        dequeueImpl();
         size--;
         return result;
     }
 
-    abstract Object dequeueImpl();
+    abstract void dequeueImpl();
 
     public int size() {
         return size;

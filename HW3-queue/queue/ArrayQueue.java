@@ -30,10 +30,8 @@ public class ArrayQueue extends AbstractQueue {
         return elements[head];
     }
 
-    protected Object dequeueImpl() {
-        Object result = element();
+    protected void dequeueImpl() {
         head = head + 1 < elements.length ? ++head : 0;
-        return result;
     }
 
     // Pre: true.

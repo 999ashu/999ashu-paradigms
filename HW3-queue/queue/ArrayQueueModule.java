@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ArrayQueueModule {
-    private static Object[] elements = new Object[9];
+    private static Object[] elements = new Object[5];
     private static int head;
     private static int size;
 
@@ -21,7 +21,7 @@ public class ArrayQueueModule {
 
     private static void ensureCapacity() {
         if (size == elements.length) {
-            Object[] temp = new Object[elements.length * 3];
+            Object[] temp = new Object[elements.length * 2];
             System.arraycopy(elements, head, temp, 0, elements.length - head);
             System.arraycopy(elements, 0, temp, elements.length - head, head);
             elements = temp;
@@ -65,7 +65,7 @@ public class ArrayQueueModule {
     }
 
     public static void clear() {
-        elements = new Object[9];
+        elements = new Object[5];
         head = 0;
         size = 0;
     }

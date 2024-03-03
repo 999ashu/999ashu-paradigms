@@ -1,29 +1,36 @@
 package queue;
 
 public class LinkedQueueBasicTest {
-    public static void fill(Queue queue, int x) {
+    public static void fillDup(Queue queue, int x) {
         for (int i = 1; i <= x; i++) {
+            queue.enqueue("bebra numba " + i);
             queue.enqueue("bebra numba " + i);
         }
     }
 
     public static void dump(Queue queue, int x) {
         for (int i = 1; i <= x; i++) {
-            System.out.println(
-                    queue.size() + " | " +
-                            queue.element() + " | " +
-                            queue.dequeue());
+            if (!queue.isEmpty()) {
+                System.out.println(
+                        queue.size() + " | " +
+                                queue.element() + " | " +
+                                queue.dequeue());
+            } else {
+                System.out.println("Empty queue");
+            }
         }
     }
 
     public static void main(String[] args) {
         Queue queue1 = new ArrayQueue();
         Queue queue2 = new LinkedQueue();
-        fill(queue1, 10);
-        fill(queue2, 10);
+        fillDup(queue1, 20);
+        fillDup(queue2, 20);
+        queue1.dedup();
+        queue2.dedup();
         System.out.println("ArrayQueue:");
-        dump(queue1, 10);
+        dump(queue1, 20);
         System.out.println(System.lineSeparator() + "LinkedQueue:");
-        dump(queue2, 10);
+        dump(queue2, 20);
     }
 }

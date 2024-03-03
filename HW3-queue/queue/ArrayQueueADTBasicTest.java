@@ -21,9 +21,9 @@ public class ArrayQueueADTBasicTest {
         ArrayQueueADT queue2 = new ArrayQueueADT();
         fill(queue1, 4);
         fill(queue2, 10);
-        System.out.println("queue1:");
+        System.out.println("First queue:");
         dump(queue1, 4);
-        System.out.println(System.lineSeparator() + "queue2:");
+        System.out.println(System.lineSeparator() + "Second queue:");
         dump(queue2, 10);
     }
 }

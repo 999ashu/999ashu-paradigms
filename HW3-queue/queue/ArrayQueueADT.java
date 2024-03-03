@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ArrayQueueADT {
-    private Object[] elements = new Object[9];
+    private Object[] elements = new Object[5];
     private int head;
     private int size;
 
@@ -21,7 +21,7 @@ public class ArrayQueueADT {
 
     private static void ensureCapacity(ArrayQueueADT queue) {
         if (queue.size == queue.elements.length) {
-            Object[] temp = new Object[queue.elements.length * 3];
+            Object[] temp = new Object[queue.elements.length * 2];
             System.arraycopy(queue.elements, queue.head, temp, 0, queue.elements.length - queue.head);
             System.arraycopy(queue.elements, 0, temp, queue.elements.length - queue.head, queue.head);
             queue.elements = temp;
@@ -65,7 +65,7 @@ public class ArrayQueueADT {
     }
 
     public static void clear(ArrayQueueADT queue) {
-        queue.elements = new Object[9];
+        queue.elements = new Object[5];
         queue.head = 0;
         queue.size = 0;
     }

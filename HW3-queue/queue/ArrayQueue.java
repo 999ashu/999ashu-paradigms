@@ -1,13 +1,19 @@
 package queue;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class ArrayQueue extends AbstractQueue {
-    private Object[] elements = new Object[9];
+    private Object[] elements = new Object[5];
     private int head;
 
     private int getTail() {
-        return head + size < elements.length ? head + size : head + size - elements.length;
+        int tail = head + size;
+        return tail < elements.length ? tail : tail - elements.length;
+    }
+
+    private int getPos(int pos) {
+        return pos < elements.length ? pos : 0;
     }
 
     @Override
@@ -18,7 +24,7 @@ public class ArrayQueue extends AbstractQueue {
 
     private void ensureCapacity() {
         if (size == elements.length) {
-            Object[] temp = new Object[elements.length * 3];
+            Object[] temp = new Object[elements.length * 2];
             System.arraycopy(elements, head, temp, 0, elements.length - head);
             System.arraycopy(elements, 0, temp, elements.length - head, head);
             elements = temp;
@@ -31,7 +37,12 @@ public class ArrayQueue extends AbstractQueue {
     }
 
     protected void dequeueImpl() {
-        head = head + 1 < elements.length ? ++head : 0;
+        head = getPos(++head);
+    }
+
+    protected void clearImp() {
+        elements = new Object[5];
+        head = 0;
     }
 
     // Pre: true.
@@ -47,13 +58,26 @@ public class ArrayQueue extends AbstractQueue {
             if (predicate.test(elements[pointer])) {
                 count++;
             }
-            pointer = pointer < elements.length - 1 ? ++pointer : 0;
+            pointer = getPos(pointer + 1);
         } while (pointer != tail);
         return count;
     }
 
-    protected void clearImp() {
-        elements = new Object[9];
+    protected void dedupImp() {
+        Object[] temp = new Object[5];
+        int newSize = 0;
+        temp[newSize++] = dequeue();
+        while (size > 0) {
+            Object curr = dequeue();
+            if (!temp[newSize - 1].equals(curr)) {
+                if (newSize == temp.length - 1) {
+                    temp = Arrays.copyOf(temp, temp.length * 2);
+                }
+                temp[newSize++] = curr;
+            }
+        }
+        elements = temp;
+        size = newSize;
         head = 0;
     }
 }

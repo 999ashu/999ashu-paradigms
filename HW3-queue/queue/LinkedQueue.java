@@ -33,6 +33,24 @@ public class LinkedQueue extends AbstractQueue {
         tail = null;
     }
 
+    protected void dedupImp() {
+        Node current = head;
+        while (current.next != null) {
+            if (current.value.equals(current.next.value)) {
+                size--;
+                if (current.next.next == null) {
+                    current.next = null;
+                    tail = current;
+                    break;
+                } else {
+                    current.next = current.next.next;
+                }
+            } else {
+                current = current.next;
+            }
+        }
+    }
+
     private static class Node {
         private final Object value;
         private Node next;

@@ -29,4 +29,8 @@ public interface Queue {
     // Pre: true.
     // Post: n' = 0.
     void clear();
+
+    // Pre: true.
+    // Post: makes ∀ i ∈ [1; size - 1]: a[i] != a[i + 1].
+    void dedup();
 }

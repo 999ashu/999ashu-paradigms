@@ -1,12 +1,11 @@
 package queue;
 
-import java.util.Objects;
 
 public abstract class AbstractQueue implements Queue {
     protected int size;
 
     public void enqueue(Object o) {
-        Objects.requireNonNull(o);
+        assert o != null;
         enqueueImpl(o);
         size++;
     }
@@ -44,4 +43,13 @@ public abstract class AbstractQueue implements Queue {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    public void dedup() {
+        if (size < 2) {
+            return;
+        }
+        dedupImp();
+    }
+
+    abstract void dedupImp();
 }

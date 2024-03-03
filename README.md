@@ -7,7 +7,7 @@
 2. [BinarySearch + Choice + ClosestD](https://github.com/999ashu/999ashu-paradigms/tree/master/java-solutions/HW2-search/search/)
 3. [ArrayQueue + CountIf](https://github.com/999ashu/999ashu-paradigms/tree/master/java-solutions/HW3-4-queue/queue/)
 4. [LinkedQueue + Dedup](https://github.com/999ashu/999ashu-paradigms/tree/master/java-solutions/HW3-4-queue/queue/)
-5. [GenericTabulator](https://github.com/999ashu/999ashu-paradigms/tree/master/java-solutions/HW1-exceptions/expression/generic)
+5. [GenericTabulator](https://github.com/999ashu/999ashu-paradigms/tree/master/java-solutions/HW1_5-exceptions/expression/generic)
 #### JavaScript:
 6.
 #### Closure:

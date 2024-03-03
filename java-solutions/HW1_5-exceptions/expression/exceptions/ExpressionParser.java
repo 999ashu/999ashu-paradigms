@@ -110,9 +110,19 @@ public class ExpressionParser implements TripleParser, ListParser {
                     return new CheckedNegate(parseAtom());
                 }
             } else if (lookup() == 't' || lookup() == 'l') {
-                if (take('t') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
+                if (take('t') && take('0')) {
+                    if (eof()) {
+                        throw new InvalidTokenException(String.valueOf(tokens));
+                    } else if (!(test('(') || Character.isWhitespace(lookup()))) {
+                        throw new InvalidExpStructureException();
+                    }
                     return new Tzero(parseAtom());
-                } else if (take('l') && take('0') && (lookup() == '(' || Character.isWhitespace(lookup()))) {
+                } else if (take('l') && take('0')) {
+                    if (eof()) {
+                        throw new InvalidTokenException(String.valueOf(tokens));
+                    } else if (!(test('(') || Character.isWhitespace(lookup()))) {
+                        throw new InvalidExpStructureException();
+                    }
                     return new Lzero(parseAtom());
                 } else {
                     throw new UnexpectedSymbolException(String.valueOf(take()));

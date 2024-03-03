@@ -10,7 +10,7 @@ import expression.parser.TripleParser;
 import java.util.*;
 
 public class ExpressionParser implements TripleParser, ListParser {
-    Set<String> vars;
+    private Set<String> vars;
 
     @Override
     public CustomExpression parse(String expression) {
@@ -24,8 +24,8 @@ public class ExpressionParser implements TripleParser, ListParser {
     }
 
     private final class ExpParser extends BaseParser {
-        int tokens = 1;
-        Map<Character, Character> parens = new HashMap<>(Map.of(
+        private int tokens = 1;
+        private final Map<Character, Character> parens = new HashMap<>(Map.of(
                 '(', ')',
                 '[', ']',
                 '{', '}'

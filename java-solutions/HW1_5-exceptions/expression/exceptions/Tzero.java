@@ -1,6 +1,9 @@
-package expression;
+package expression.exceptions;
 
-public class Tzero extends AbstractUnaryOperation{
+import expression.AbstractUnaryOperation;
+import expression.CustomExpression;
+
+public class Tzero extends AbstractUnaryOperation {
     public Tzero(CustomExpression value) {
         super(value);
     }

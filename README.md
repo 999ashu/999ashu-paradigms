@@ -10,3 +10,5 @@
  1. [GenericTabulator](https://github.com/999ashu/999ashu-paradigms/tree/master/HW1-exceptions/expression/generic)
 #### JavaScript:
 1.
+#### Closure:
+#### Prolog:

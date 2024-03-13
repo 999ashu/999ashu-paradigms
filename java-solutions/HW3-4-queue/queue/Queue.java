@@ -1,7 +1,7 @@
 package queue;
 
 // Model: HEAD -> a[1], a[2], ..., a[n] <- TAIL.
-//        New elements are to the tail.
+//        New elements are added to the tail.
 //        Old elements are took from the head one by one.
 // Invariant: n ⩾ 0, ∀ i ∈ [1; n]: a'[i] != null.
 // Let: immutable(k), ∀ i ∈ [1; k]: a'[i] != a[i].
@@ -31,6 +31,8 @@ public interface Queue {
     void clear();
 
     // Pre: true.
-    // Post: makes ∀ i ∈ [1; size - 1]: a[i] != a[i + 1].
+    // Post: order of elements is immutable,
+    //       ∀ i ∈ [1; size] ∃ j ∈ [1; size']: a[i] = a'[j],
+    //       ∀ i ∈ [2; size']: a'[i - 1] != a'[i]
     void dedup();
 }

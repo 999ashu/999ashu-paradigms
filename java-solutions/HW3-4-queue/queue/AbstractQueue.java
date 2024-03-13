@@ -48,8 +48,19 @@ public abstract class AbstractQueue implements Queue {
         if (size < 2) {
             return;
         }
-        dedupImp();
+        Object previous = dequeue();
+        enqueue(previous);
+        Object current = dequeue();
+        int s = size;
+        for (int i = 1; i < s; i++) {
+            if (!previous.equals(current)) {
+                enqueue(current);
+            }
+            previous = current;
+            current = dequeue();
+        }
+        if (!current.equals(previous)) {
+            enqueue(current);
+        }
     }
-
-    abstract void dedupImp();
 }

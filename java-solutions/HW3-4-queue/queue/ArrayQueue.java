@@ -1,6 +1,5 @@
 package queue;
 
-import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class ArrayQueue extends AbstractQueue {
@@ -61,23 +60,5 @@ public class ArrayQueue extends AbstractQueue {
             pointer = getPos(pointer + 1);
         } while (pointer != tail);
         return count;
-    }
-
-    protected void dedupImp() {
-        Object[] temp = new Object[5];
-        int newSize = 0;
-        temp[newSize++] = dequeue();
-        while (size > 0) {
-            Object curr = dequeue();
-            if (!temp[newSize - 1].equals(curr)) {
-                if (newSize == temp.length - 1) {
-                    temp = Arrays.copyOf(temp, temp.length * 2);
-                }
-                temp[newSize++] = curr;
-            }
-        }
-        elements = temp;
-        size = newSize;
-        head = 0;
     }
 }

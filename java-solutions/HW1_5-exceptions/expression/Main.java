@@ -19,7 +19,6 @@ public class Main {
                 new Subtract(new Variable("x"), new Const(1)));
         System.out.println("Before parse: " + exp);
         ExpressionParser parser = new ExpressionParser();
-        System.out.println(parser.parse("x + 1"));
         exp = parser.parse(exp.toString());
         System.out.println("After parse: " + exp);
         System.out.println("===========================================================");

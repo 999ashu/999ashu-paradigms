@@ -13,7 +13,7 @@ public class CheckedDivide extends AbstractBinaryOperation {
     @Override
     protected int compute(int value1, int value2) {
         if (value2 == 0) {
-            throw new DivisionByZeroException(value1);
+            throw new DivisionByZeroException(String.valueOf(value1));
         } else if (value1 == Integer.MIN_VALUE && value2 == -1) {
             throw new OverflowException(getOperation(), value1, value2);
         }

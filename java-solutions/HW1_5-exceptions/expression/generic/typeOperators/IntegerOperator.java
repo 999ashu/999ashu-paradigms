@@ -2,8 +2,6 @@ package expression.generic.typeOperators;
 
 import expression.exceptions.parsingExceptions.DivisionByZeroException;
 
-import java.math.BigInteger;
-
 public class IntegerOperator implements TypeOperator<Integer> {
     @Override
     public Integer convert(int value) {

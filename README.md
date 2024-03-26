@@ -9,6 +9,9 @@
 4. [LinkedQueue + Dedup](https://github.com/999ashu/999ashu-paradigms/tree/master/java-solutions/HW3-4-queue/queue/)
 5. [GenericTabulator + Ub](https://github.com/999ashu/999ashu-paradigms/tree/master/java-solutions/HW1_5-exceptions/expression/generic)
 #### JavaScript:
-6.
+6. [FunctionalExpression + Pie + Square + AvgMed](https://github.com/999ashu/999ashu-paradigms/blob/master/javascript-solutions/functionalExpression.js)
+7. [ObjectExpression + SinCos + Harmonic](https://github.com/999ashu/999ashu-paradigms/blob/master/javascript-solutions/objectExpression.js)
+8. [Prefix + Postfix + Means](https://github.com/999ashu/999ashu-paradigms/blob/master/javascript-solutions/objectExpression.js)
 #### Closure:
+9. [Linear](https://github.com/999ashu/999ashu-paradigms/blob/master/closure-solutions/linear.clj)
 #### Prolog:

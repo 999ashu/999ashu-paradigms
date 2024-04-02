@@ -48,5 +48,5 @@ const makeExpression = (stack) => {
 }
 
 const parse = (expression) => (...args) => {
-    return makeExpression(expression.split(' ').filter(e => e.length > 0))(...args);
+    return makeExpression(expression.split(/\s/).filter(Boolean))(...args);
 }

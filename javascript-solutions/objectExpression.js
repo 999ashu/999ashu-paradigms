@@ -1,54 +1,58 @@
 'use strict'
 
-function value(object, evaluate, toString) {
+function Value(object, evaluate, toString, prefix) {
     object.prototype.evaluate = evaluate;
     object.prototype.toString = toString;
+    object.prototype.prefix = prefix;
+    return object;
 }
 
 const opMap = {};
+const opLen = (op) => (opMap[op].length === 0 ? Infinity : opMap[op].length);
 function operation(object, operator, sign) {
     object.prototype.sign = sign;
-    value(
-        object,
+    Value(object,
         function (...args) {return (operator(...this.values.map((e) => e.evaluate(...args))))},
-        function () {return (this.values.join(' ') + ' ' + this.sign)}
+        function () {return (this.values.join(' ') + ' ' + this.sign)},
+        function () {return ('(' + this.sign + ' ' + (this.values.map((e) => e.prefix())).join(' ') + ')')}
         );
-    opMap[sign] = [(...args) => new object(...args), object.length];
+    opMap[sign] = object;
+    return object;
 }
 
-
-function Const(c) {this.value = c}
-function Variable(v) {this.value = v}
-function Add(e1, e2) {this.values = [e1, e2]}
-function Subtract(e1, e2) {this.values = [e1, e2]}
-function Multiply(e1, e2) {this.values = [e1, e2]}
-function Divide(e1, e2) {this.values = [e1, e2]}
-function Hypot(e1, e2) {this.values = [e1, e2]}
-function HMean(e1, e2) {this.values = [e1, e2]}
-function Negate(e) {this.values = [e]}
-function Sin(e) {this.values = [e]}
-function Cos(e) {this.values = [e]}
-
-
 const vArr = ['x', 'y', 'z']
-value(
-    Const,
-    function () {return this.value},
-    function () {return (this.value).toString()}
-    );
-value(
-    Variable,
-    function (...args) {return parseFloat(args[vArr.indexOf(this.value)])},
-    function () {return (this.value).toString()}
-    );
+const mean = (...args) => (args.reduce((a, b) => a + b, 0) / args.length)
 
-operation(Add, (a, b) => (a + b), '+');
-operation(Subtract, (a, b) => (a - b), '-');
-operation(Multiply, (a, b) => (a * b), '*');
-operation(Divide, (a, b) => (a / b), '/');
-operation(Negate, (a) => (-a), 'negate');
-operation(Sin, Math.sin, 'sin');
-operation(Cos, Math.cos, 'cos');
+const Const = Value(function (c) {this.Value = c}, function () {return this.Value}, function () {return (this.Value).toString()}, function () {return (this.Value).toString()});
+const Variable = Value(function (c) {this.Value = c}, function (...args) {return parseFloat(args[vArr.indexOf(this.Value)])}, function () {return (this.Value).toString()}, function () {return (this.Value).toString()});
+const Add = operation(function (e1, e2) {this.values = [e1, e2]}, (a, b) => (a + b), '+');
+const Subtract = operation(function (e1, e2) {this.values = [e1, e2]}, (a, b) => (a - b), '-');
+const Multiply = operation(function (e1, e2) {this.values = [e1, e2]}, (a, b) => (a * b), '*');
+const Divide = operation(function (e1, e2) {this.values = [e1, e2]}, (a, b) => (a / b), '/');
+const Negate = operation(function (e) {this.values = [e]}, (a) => (-a), 'negate');
+const Sin = operation(function (e) {this.values = [e]}, Math.sin, 'sin');
+const Cos = operation(function (e) {this.values = [e]}, Math.cos, 'cos');
+const Mean = operation(function (...args) {this.values = args}, (...args) => (mean(...args)), 'mean');
+const Var = operation(function (...args) {this.values = args}, (...args) => (mean(...args.map(e => e * e)) - (e => e * e)(mean(...args))), 'var');
+
+
+function ParsingError(message) {
+    this.message = message;
+}
+ParsingError.prototype = Object.create(Error.prototype);
+ParsingError.prototype.name = "ParsingError";
+
+function error(error, name) {
+    error.prototype = Object.create(ParsingError.prototype);
+    error.prototype.name = name;
+    return error;
+}
+
+const IncorrectBracketSequenceError = error(function (message) {this.message = message}, 'IncorrectBracketSequenceError')
+const UnexpectedSymbolError = error(function (message) {this.message = message}, 'UnexpectedSymbolError')
+const InvalidTokenError = error(function (message) {this.message = message}, 'InvalidTokenError')
+const InvalidExpStructureError = error(function (message) {this.message = message}, 'InvalidExpStructureError')
+
 
 const constVar = (v) => ((vArr.indexOf(v) === -1) ? new Const(parseFloat(v)) : new Variable(v));
 
@@ -56,14 +60,68 @@ const makeExpression = (stack) => {
     let peek = stack.pop();
     if (peek in opMap) {
         let args = []
-        for (let i = opMap[peek][1] - 1; i >= 0; i--) {
+        for (let i = opMap[peek].length - 1; i >= 0; i--) {
             args[i] = (makeExpression(stack))
         }
-        return opMap[peek][0](...args);
+        return new opMap[peek](...args);
     }
     return constVar(peek)
 }
 
 const parse = (expression) => {
-    return makeExpression(expression.split(' ').filter(e => e.length > 0));
+    return makeExpression(expression.split(/\s/).filter(Boolean));
+}
+
+const checkBrackets = (stack, inProgress = true) => {
+    if (stack.length === 0) {
+        throw new InvalidExpStructureError('Empty expression.');
+    }
+    if (stack[0] === '(') {
+        stack.shift()
+        let expr = makeExpressionByPrefix(stack);
+        if (stack[0] === ')') {
+            stack.shift();
+            return expr;
+        } else {
+            throw new IncorrectBracketSequenceError('No closing parenthesis.');
+        }
+    } else if (inProgress) {
+        if (stack[0] in opMap) {
+            throw new InvalidTokenError('Received incorrect token of argument: ' + stack[0] + '.');
+        }
+        return makeExpressionByPrefix(stack)
+    } else {
+        let expr = makeExpressionByPrefix(stack)
+        if (stack.length !== 0) {
+            throw new InvalidExpStructureError('End of expression expected, but received: ' + stack[0] + '.');
+        }
+        return expr;
+    }
+}
+
+const makeExpressionByPrefix = (stack) => {
+    let peek = stack.shift();
+    if (peek in opMap) {
+        let args = []
+        while (stack[0] !== ')' && args.length < opLen(peek)) {
+            args.push(checkBrackets(stack));
+        }
+        if (opMap[peek].length !== 0 && args.length < opMap[peek].length) {
+            throw new InvalidTokenError('Not enough arguments for ' + peek + ' operation.');
+        }
+        return new opMap[peek](...args);
+    } else if (vArr.indexOf(peek) !== -1 || !isNaN(peek)) {
+        return constVar(peek);
+    } else {
+        throw new UnexpectedSymbolError('Unexpected symbol received: ' + peek + '.');
+    }
+}
+
+const parsePrefix = (expression) => {
+    let stack = expression.split(/\s+|([()])/).filter(Boolean);
+    let expr = checkBrackets(stack, false);
+    if (stack.length !== 0) {
+        throw new ParsingError();
+    }
+    return expr;
 }

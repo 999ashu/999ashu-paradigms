@@ -1,6 +1,6 @@
 'use strict'
 
-function Value(object, evaluate, toString, prefix) {
+function value(object, evaluate, toString, prefix) {
     object.prototype.evaluate = evaluate;
     object.prototype.toString = toString;
     object.prototype.prefix = prefix;
@@ -11,7 +11,7 @@ const opMap = {};
 const opLen = (op) => (opMap[op].length === 0 ? Infinity : opMap[op].length);
 function operation(object, operator, sign) {
     object.prototype.sign = sign;
-    Value(object,
+    value(object,
         function (...args) {return (operator(...this.values.map((e) => e.evaluate(...args))))},
         function () {return (this.values.join(' ') + ' ' + this.sign)},
         function () {return ('(' + this.sign + ' ' + (this.values.map((e) => e.prefix())).join(' ') + ')')}
@@ -23,8 +23,9 @@ function operation(object, operator, sign) {
 const vArr = ['x', 'y', 'z']
 const mean = (...args) => (args.reduce((a, b) => a + b, 0) / args.length)
 
-const Const = Value(function (c) {this.Value = c}, function () {return this.Value}, function () {return (this.Value).toString()}, function () {return (this.Value).toString()});
-const Variable = Value(function (c) {this.Value = c}, function (...args) {return parseFloat(args[vArr.indexOf(this.Value)])}, function () {return (this.Value).toString()}, function () {return (this.Value).toString()});
+// :NOTE: generalize
+const Const = value(function (c) {this.value = c}, function () {return this.value}, function () {return (this.value).toString()}, function () {return (this.value).toString()});
+const Variable = value(function (c) {this.value = c}, function (...args) {return parseFloat(args[vArr.indexOf(this.value)])}, function () {return (this.value).toString()}, function () {return (this.value).toString()});
 const Add = operation(function (e1, e2) {this.values = [e1, e2]}, (a, b) => (a + b), '+');
 const Subtract = operation(function (e1, e2) {this.values = [e1, e2]}, (a, b) => (a - b), '-');
 const Multiply = operation(function (e1, e2) {this.values = [e1, e2]}, (a, b) => (a * b), '*');
@@ -34,7 +35,6 @@ const Sin = operation(function (e) {this.values = [e]}, Math.sin, 'sin');
 const Cos = operation(function (e) {this.values = [e]}, Math.cos, 'cos');
 const Mean = operation(function (...args) {this.values = args}, (...args) => (mean(...args)), 'mean');
 const Var = operation(function (...args) {this.values = args}, (...args) => (mean(...args.map(e => e * e)) - (e => e * e)(mean(...args))), 'var');
-
 
 function ParsingError(message) {
     this.message = message;
@@ -78,6 +78,9 @@ const checkBrackets = (stack, inProgress = true) => {
     }
     if (stack[0] === '(') {
         stack.shift()
+        if (!(stack[0] in opMap)) {
+            throw new InvalidExpStructureError('Incorrect prefix form. Not operation received: ' + stack[0] + '.');
+        }
         let expr = makeExpressionByPrefix(stack);
         if (stack[0] === ')') {
             stack.shift();

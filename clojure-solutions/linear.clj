@@ -1,6 +1,6 @@
 (defn operation [f]
-  (fn [a b]
-    (apply mapv f a b)))
+  (fn [& args]
+    (apply mapv f args)))
 
 (def v+ (operation +))
 (def v- (operation -))

@@ -124,7 +124,7 @@ const parsePrefix = (expression) => {
     let stack = expression.split(/\s+|([()])/).filter(Boolean);
     let expr = checkBrackets(stack, false);
     if (stack.length !== 0) {
-        throw new ParsingError();
+        throw new InvalidExpStructureError('Received unused argument: ' + stack[0] + '.');
     }
     return expr;
 }

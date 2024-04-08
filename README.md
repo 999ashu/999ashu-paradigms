@@ -10,8 +10,9 @@
 5. [GenericTabulator + Ub](https://github.com/999ashu/999ashu-paradigms/tree/master/java-solutions/HW1_5-exceptions/expression/generic)
 #### JavaScript:
 6. [FunctionalExpression + Pie + Square + AvgMed](https://github.com/999ashu/999ashu-paradigms/blob/master/javascript-solutions/functionalExpression.js)
-7. [ObjectExpression + SinCos + Harmonic](https://github.com/999ashu/999ashu-paradigms/blob/master/javascript-solutions/objectExpression.js)
-8. [Prefix + Postfix + Means](https://github.com/999ashu/999ashu-paradigms/blob/master/javascript-solutions/objectExpression.js)
-#### Closure:
-9. [Linear](https://github.com/999ashu/999ashu-paradigms/blob/master/closure-solutions/linear.clj)
+7. [ObjectExpression + SinCos](https://github.com/999ashu/999ashu-paradigms/blob/master/javascript-solutions/objectExpression.js)
+8. [Prefix + MeanVar](https://github.com/999ashu/999ashu-paradigms/blob/master/javascript-solutions/objectExpression.js)
+#### Clojure:
+9. [Linear + Cuboid](https://github.com/999ashu/999ashu-paradigms/blob/master/clojure-solutions/linear.clj)
+10. [FunctionalExpression](https://github.com/999ashu/999ashu-paradigms/blob/master/clojure-solutions/expression.clj)
 #### Prolog:

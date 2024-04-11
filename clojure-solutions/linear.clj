@@ -2,6 +2,8 @@
   (fn [& args]
     (apply mapv f args)))
 
+(defn *s [f] (fn [o s] (mapv (fn [e] (f e s)) o)))
+
 (def v+ (operation +))
 (def v- (operation -))
 (def v* (operation *))
@@ -16,16 +18,14 @@
     (- (* az bx) (* ax bz))
     (- (* ax by) (* ay bx))))
 
-(defn v*s [v s]
-  (mapv (fn [e] (* e s)) v))
+(def v*s (*s *))
 
 (def m+ (operation v+))
 (def m- (operation v-))
 (def m* (operation v*))
 (def md (operation vd))
 
-(defn m*s [m s]
-  (mapv (fn [v] (v*s v s)) m))
+(def m*s (*s v*s))
 
 (defn m*v [m v]
   (mapv (partial scalar v) m))

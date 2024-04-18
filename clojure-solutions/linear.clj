@@ -2,7 +2,9 @@
   (fn [& args]
     (apply mapv f args)))
 
-(defn *s [f] (fn [o s] (mapv (fn [e] (f e s)) o)))
+(defn *s [f]
+  (fn [o s]
+    (mapv (fn [e] (f e s)) o)))
 
 (def v+ (operation +))
 (def v- (operation -))

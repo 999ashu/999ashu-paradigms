@@ -1,13 +1,16 @@
-(defn operate-between [f]
+(defn operation [f]
   (fn [& args]
   (fn [varSet]
     (apply f (mapv (fn [e] (e varSet)) args)))))
 
-(def add (operate-between +))
-(def subtract (operate-between -))
-(def multiply (operate-between *))
-(def divide (operate-between (fn [a b] (/ (double a) (double b)))))
-(def negate (operate-between -))
+(def add (operation +))
+(def subtract (operation -))
+(def multiply (operation *))
+(def divide (operation (fn [a b] (/ (double a) (double b)))))
+(def negate (operation -))
+
+(def sin (operation (fn [a] (Math/sin a))))
+(def cos (operation (fn [a] (Math/cos a))))
 
 (def constant constantly)
 (defn variable [var]
@@ -18,7 +21,9 @@
             '-      subtract
             '*      multiply
             '/      divide
-            'negate negate})
+            'negate negate
+            'sin sin
+            'cos cos})
 
 (defn makeExpression [token]
   (cond

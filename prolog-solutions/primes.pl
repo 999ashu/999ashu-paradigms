@@ -10,11 +10,10 @@ composite(N) :- N > 1, \+ prime(N).
 nth_prime(N, P, Pos, Cur) :-
     prime(Cur),
     (
-        Pos =:= N
-        -> P is Cur
-        ; NextPos is Pos + 1,
-          Next is Cur + 1,
-          nth_prime(N, P, NextPos, Next)
+        Pos is N -> P is Cur;
+        NextPos is Pos + 1,
+        Next is Cur + 1,
+        nth_prime(N, P, NextPos, Next)
     ).
 
 nth_prime(N, P, Pos, Cur) :-
@@ -25,10 +24,16 @@ nth_prime(N, P, Pos, Cur) :-
 nth_prime(N, P) :- nth_prime(N, P, 1, 2).
 
 
-get_divisor(N, Cur, D) :-
-    (N mod Cur =:= 0, D is Cur);
-    (Cur * Cur < N, Next is Cur + 1, get_divisor(N, Next, D));
-    (Cur * Cur >= N, D is N).
+get_divisor(N, Cur, Cur) :- N mod Cur =:= 0.
+get_divisor(N, Cur, D) :- Cur * Cur < N, Next is Cur + 1, get_divisor(N, Next, D).
+get_divisor(N, Cur, D) :- Cur * Cur >= N, D is N.
+
+prime_product(N, N, [], P).
+prime_product(N, Cur, [H | T], P) :-
+    prime(H),
+    H =< P,
+    Next is Cur * H,
+    prime_product(N, Next, T, H).
 
 prime_divisors(1, Divisors, Divisors).
 prime_divisors(N, List, Divisors) :-
@@ -38,13 +43,6 @@ prime_divisors(N, List, Divisors) :-
     prime_divisors(N1, [D | List], Divisors).
 
 prime_divisors(N, Divisors) :-
-%    prime_product(N, 1, Divisors),
+    \+ number(N) -> prime_product(N, 1, Divisors, 0);
     prime_divisors(N, [], RDivisors),
     reverse(RDivisors, Divisors), !.
-
-% :NOTE: prime_divisors(N, [2,2,2,3])
-%prime_product(N, N, []).
-%prime_product(N, Cur, [H | T]) :-
-%    prime(H),
-%    Next is Cur * H,
-%    prime_product(N, Next, T).

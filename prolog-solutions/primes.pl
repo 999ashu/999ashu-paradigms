@@ -28,21 +28,26 @@ get_divisor(N, Cur, Cur) :- N mod Cur =:= 0.
 get_divisor(N, Cur, D) :- Cur * Cur < N, Next is Cur + 1, get_divisor(N, Next, D).
 get_divisor(N, Cur, D) :- Cur * Cur >= N, D is N.
 
-prime_product(N, N, [], P).
-prime_product(N, Cur, [H | T], P) :-
+prime_product(N, N, []).
+prime_product(N, Cur, [H | T]) :-
     prime(H),
-    H =< P,
     Next is Cur * H,
-    prime_product(N, Next, T, H).
+    prime_product(N, Next, T).
 
 prime_divisors(1, Divisors, Divisors).
 prime_divisors(N, List, Divisors) :-
     N > 1,
     get_divisor(N, 2, D),
     N1 is N // D,
+    prime(D),
     prime_divisors(N1, [D | List], Divisors).
 
+not_decreasing_order([]).
+not_decreasing_order([_]).
+not_decreasing_order([C, H | T]) :- C =< H, not_decreasing_order([H | T]).
+
 prime_divisors(N, Divisors) :-
-    \+ number(N) -> prime_product(N, 1, Divisors, 0);
+    (\+ number(N) -> prime_product(N, 1, Divisors);
     prime_divisors(N, [], RDivisors),
-    reverse(RDivisors, Divisors), !.
+    reverse(RDivisors, Divisors), !),
+    not_decreasing_order(Divisors).

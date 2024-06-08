@@ -14,5 +14,10 @@
 8. [Prefix + MeanVar](https://github.com/999ashu/999ashu-paradigms/blob/master/javascript-solutions/objectExpression.js)
 #### Clojure:
 9. [Linear + Cuboid](https://github.com/999ashu/999ashu-paradigms/blob/master/clojure-solutions/linear.clj)
-10. [FunctionalExpression](https://github.com/999ashu/999ashu-paradigms/blob/master/clojure-solutions/expression.clj)
+10. [FunctionalExpression + SinCos](https://github.com/999ashu/999ashu-paradigms/blob/master/clojure-solutions/expression.clj)
+11. [ObjectExpression + ExpLn](https://github.com/999ashu/999ashu-paradigms/blob/master/clojure-solutions/expression.clj)
+12. [CombinatorialParser + Variables](https://github.com/999ashu/999ashu-paradigms/blob/master/clojure-solutions/expression.clj)
 #### Prolog:
+13. [Primes + Nth](https://github.com/999ashu/999ashu-paradigms/blob/master/prolog-solutions/primes.pl)
+14. TreeMap + Last
+15. Expression + SquareSqrt
